@@ -72,7 +72,7 @@ describe('reactLazyloader', function () {
             fallback: fallbackItem,
             maxDuration: 0
           };
-          var componentProps = Object.assign({}, props, {ref: null});
+          var componentProps = Object.assign({}, props, {ref: ref});
           return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));
         });
 
