@@ -8,7 +8,8 @@
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
 > The webpack loader for fetch react component async
-> 用于异步按需加载 React Component, 支持 Dll 按需加载，推荐在 大组件或者 服务端支持 H2 的时候使用
+
+用于异步按需加载 React Component, 支持 Dll 按需加载，推荐在 **微前端项目 或 大组件加载 或 服务端支持 H2** 的时候使用
 
 ## Installation
 
