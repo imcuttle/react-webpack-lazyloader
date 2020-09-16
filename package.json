@@ -1,0 +1,102 @@
+{
+  "name": "react-lazyloader",
+  "version": "1.0.0",
+  "description": "The webpack loader for fetch react component async",
+  "author": "余聪 <yucong06@meituan.com>",
+  "scripts": {
+    "example:dev": "cd examples && webpack-dev-server --open",
+    "example:dll": "cd examples && BUILD_MODE=dll webpack",
+    "example": "run-p --print-label \"example:** -- --watch\"",
+    "test": "npx jest",
+    "preversion": "npm test",
+    "build": "npm run clean && run-p --print-label \"build:**\"",
+    "build:es": "tsc --outDir es --module es6",
+    "build:cjs": "tsc --outDir lib",
+    "build:tds": "tsc --emitDeclarationOnly -d",
+    "clean": "rimraf types es lib",
+    "prepare": "npm run build",
+    "version": "npm run changelog",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS"
+    }
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "es",
+    "types",
+    "lib",
+    "src",
+    "__tests__"
+  ],
+  "keywords": [
+    "余聪",
+    "react",
+    "lazyloader",
+    "react-lazyloader"
+  ],
+  "main": "lib",
+  "types": "types",
+  "license": "MIT",
+  "repository": "余聪/react-lazyloader",
+  "module": "es",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testMatch": [
+      "**/__test{s,}__/*.(spec|test).{t,j}s{x,}"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.10.4",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.13",
+    "@types/react": "^16.9.49",
+    "add-asset-html-webpack-plugin": "^3.1.3",
+    "babel-loader": "^8.1.0",
+    "conventional-changelog-cli": "^2.1.0",
+    "html-webpack-plugin": "^4.4.1",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "lodash": "^4.17.20",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.0.2",
+    "raw-loader": "^4.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-node-externals": "^2.5.2"
+  },
+  "dependencies": {
+    "loader-utils": "^2.0.0"
+  }
+}
