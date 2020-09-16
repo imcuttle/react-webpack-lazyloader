@@ -1,5 +1,5 @@
 {
-  "name": "react-lazyloader",
+  "name": "react-webpack-lazyloader",
   "version": "1.0.0",
   "description": "The webpack loader for fetch react component async",
   "author": "余聪 <yucong06@meituan.com>",
@@ -39,12 +39,12 @@
     "余聪",
     "react",
     "lazyloader",
-    "react-lazyloader"
+    "react-webpack-lazyloader"
   ],
   "main": "lib",
   "types": "types",
   "license": "MIT",
-  "repository": "余聪/react-lazyloader",
+  "repository": "余聪/react-webpack-lazyloader",
   "module": "es",
   "jest": {
     "transform": {

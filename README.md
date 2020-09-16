@@ -1,9 +1,9 @@
-# react-lazyloader
+# react-webpack-lazyloader
 
-[![Build status](https://img.shields.io/travis/余聪/react-lazyloader/master.svg?style=flat-square)](https://travis-ci.org/余聪/react-lazyloader)
-[![Test coverage](https://img.shields.io/codecov/c/github/余聪/react-lazyloader.svg?style=flat-square)](https://codecov.io/github/余聪/react-lazyloader?branch=master)
-[![NPM version](https://img.shields.io/npm/v/react-lazyloader.svg?style=flat-square)](https://www.npmjs.com/package/react-lazyloader)
-[![NPM Downloads](https://img.shields.io/npm/dm/react-lazyloader.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/react-lazyloader)
+[![Build status](https://img.shields.io/travis/余聪/react-webpack-lazyloader/master.svg?style=flat-square)](https://travis-ci.org/余聪/react-webpack-lazyloader)
+[![Test coverage](https://img.shields.io/codecov/c/github/余聪/react-webpack-lazyloader.svg?style=flat-square)](https://codecov.io/github/余聪/react-webpack-lazyloader?branch=master)
+[![NPM version](https://img.shields.io/npm/v/react-webpack-lazyloader.svg?style=flat-square)](https://www.npmjs.com/package/react-webpack-lazyloader)
+[![NPM Downloads](https://img.shields.io/npm/dm/react-webpack-lazyloader.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/react-webpack-lazyloader)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg?style=flat-square)](https://conventionalcommits.org)
 
@@ -14,9 +14,9 @@
 ## Installation
 
 ```bash
-npm install react-lazyloader -D
+npm install react-webpack-lazyloader -D
 # or use yarn
-yarn add react-lazyloader --dev
+yarn add react-webpack-lazyloader --dev
 ```
 
 ## How it works?
@@ -27,7 +27,7 @@ yarn add react-lazyloader --dev
 export default () => <button></button>
 ```
 
-- Transformed Button after `react-lazyloader`
+- Transformed Button after `react-webpack-lazyloader`
 
 ```jsx
 const Component = React.lazy(() => import('!!BUTTON_REQUEST'))
@@ -46,7 +46,7 @@ export default Button
 ### 正常使用
 
 ```jsx
-import Button from 'react-lazyloader!./button'
+import Button from 'react-webpack-lazyloader!./button'
 
 // 按照正常逻辑使用
 ;<Button>button</Button>
