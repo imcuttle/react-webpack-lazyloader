@@ -47,6 +47,7 @@
   "repository": "余聪/react-webpack-lazyloader",
   "module": "es",
   "jest": {
+    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest",
       "^.+\\.jsx?$": "babel-jest"

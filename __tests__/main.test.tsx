@@ -18,6 +18,7 @@ const evalCode = (stats: any, filename = 'bundle.js') => {
   const mod = {
     exports: {}
   }
+  // console.log('content', content)
   new Function('module', 'exports', 'require', content)(mod, mod.exports, (id) => {
     if (fs.existsSync(nps.resolve(__dirname, id))) {
       return evalCode(stats, id)
@@ -61,7 +62,7 @@ describe('reactLazyloader', function () {
       "
         import {lazy, Suspense} from 'react';
         import * as React from 'react';
-        
+
         var fallbackItem = null;
         // request
         var LazyComponent = lazy(function() {
@@ -144,7 +145,7 @@ describe('reactLazyloader', function () {
 
     expect(testRenderer.toJSON()).toMatchInlineSnapshot(`"loading"`)
 
-    await delay(100)
+    await delay(0)
     expect(testRenderer.toJSON()).toMatchInlineSnapshot(`
       <button>
         button
