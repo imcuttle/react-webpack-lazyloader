@@ -1,7 +1,7 @@
 # react-webpack-lazyloader
 
-[![Build status](https://img.shields.io/travis/余聪/react-webpack-lazyloader/master.svg?style=flat-square)](https://travis-ci.org/余聪/react-webpack-lazyloader)
-[![Test coverage](https://img.shields.io/codecov/c/github/余聪/react-webpack-lazyloader.svg?style=flat-square)](https://codecov.io/github/余聪/react-webpack-lazyloader?branch=master)
+[![Build status](https://img.shields.io/travis/imcuttle/react-webpack-lazyloader/master.svg?style=flat-square)](https://travis-ci.org/imcuttle/react-webpack-lazyloader)
+[![Test coverage](https://img.shields.io/codecov/c/github/imcuttle/react-webpack-lazyloader.svg?style=flat-square)](https://codecov.io/github/imcuttle/react-webpack-lazyloader?branch=master)
 [![NPM version](https://img.shields.io/npm/v/react-webpack-lazyloader.svg?style=flat-square)](https://www.npmjs.com/package/react-webpack-lazyloader)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-webpack-lazyloader.svg?style=flat-square&maxAge=43200)](https://www.npmjs.com/package/react-webpack-lazyloader)
 [![Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
@@ -117,8 +117,8 @@ chunk name
 
 ## Authors
 
-This library is written and maintained by 余聪, <a href="mailto:yucong06@meituan.com">yucong06@meituan.com</a>.
+This library is written and maintained by imcuttle, <a href="mailto:yucong06@meituan.com">yucong06@meituan.com</a>.
 
 ## License
 
-MIT - [余聪](https://github.com/余聪) 🐟
+MIT - [imcuttle](https://github.com/imcuttle) 🐟
