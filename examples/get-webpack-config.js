@@ -88,6 +88,7 @@ module.exports = function getConfig(mode) {
 
   if (mode === 'normal' || mode === 'normal-with-dll') {
     config.entry.app = '.'
+    config.entry.dll = './dll-entry'
 
     config.plugins.push(
       new HtmlWebpackPlugin({

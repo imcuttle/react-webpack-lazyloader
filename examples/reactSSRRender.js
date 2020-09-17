@@ -22,9 +22,6 @@ export default function ssrRender() {
     await store.dispatch.globalData.getData()
     console.log(activeRoute, ctx.url)
 
-    const statsFile = nps.resolve(__dirname, 'dist/loadable-stats.json')
-    const dllStatsFile = nps.resolve(__dirname, 'dllDist/loadable-stats.json')
-
     const merge = (a, b) => {
       return mergeWith(a, b, function customizer(objValue, srcValue) {
         if (Array.isArray(objValue) || Array.isArray(srcValue)) {
@@ -34,6 +31,8 @@ export default function ssrRender() {
     }
 
     // 合并 dll stats 和 app stats，因为两者均有可能具有 chunk
+    const statsFile = nps.resolve(__dirname, 'dist/loadable-stats.json')
+    const dllStatsFile = nps.resolve(__dirname, 'dllDist/loadable-stats.json')
     const stats = merge(merge({}, require(statsFile)), require(dllStatsFile))
     const extractor = new ChunkExtractor({ stats: stats, entrypoints: ['app', 'dll'] })
 
