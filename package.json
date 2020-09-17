@@ -46,7 +46,7 @@
   "main": "lib",
   "types": "types",
   "license": "MIT",
-  "repository": "余聪/react-webpack-lazyloader",
+  "repository": "imcuttle/react-webpack-lazyloader",
   "module": "es",
   "jest": {
     "testEnvironment": "node",
@@ -71,8 +71,10 @@
       "@commitlint/config-conventional"
     ]
   },
+  "peerDependencies": {
+    "@loadable/babel-plugin": ">=5"
+  },
   "devDependencies": {
-    "@babel/preset-react": "^7.10.4",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@loadable/babel-plugin": "^5.13.2",
@@ -115,6 +117,7 @@
     "webpack-node-externals": "^2.5.2"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.10.4",
     "@babel/core": "^7.11.6",
     "loader-utils": "^2.0.0"
   }

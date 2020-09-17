@@ -14,9 +14,9 @@
 ## Installation
 
 ```bash
-npm install react-webpack-lazyloader -D
+npm install react-webpack-lazyloader @loadable/babel-plugin -D
 # or use yarn
-yarn add react-webpack-lazyloader --dev
+yarn add react-webpack-lazyloader @loadable/babel-plugin --dev
 ```
 
 ## How it works?
@@ -30,13 +30,10 @@ export default () => <button></button>
 - Transformed Button after `react-webpack-lazyloader`
 
 ```jsx
-const Component = React.lazy(() => import('!!BUTTON_REQUEST'))
+import loadable from '@loadable/babel-plugin'
+const Component = loadable(() => import('!!BUTTON_REQUEST'))
 const Button = React.forward(function Button(props, ref) {
-  return (
-    <Suspense>
-      <Component ref={ref} {...props} />
-    </Suspense>
-  )
+  return <Component ref={ref} {...props} />
 })
 export default Button
 ```
@@ -61,6 +58,13 @@ import Button from 'react-webpack-lazyloader!./button'
 **注意：** Dll 模式下的组件更新，不会热替换，可能需要 IPC (Dll watch <-> Dev Server)，后续进行完善
 
 ## Options
+
+### `lazyType`
+
+使用 [`@loadable/component`](https://github.com/gregberge/loadable-components) 还是 `React.lazy` 方式实现异步加载，其中 `@loadable/component` 支持 [SSR](./examples)
+
+- Type: `'loadable' | 'React.lazy'`
+- Default: `'loadable'`
 
 ### `fallback`
 
