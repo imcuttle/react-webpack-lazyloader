@@ -55,7 +55,7 @@ import Button from 'react-webpack-lazyloader!./button'
 
 例子请看：[examples](./examples)
 
-**注意：** Dll 模式下的组件更新，不会热替换，可能需要 IPC (Dll watch <-> Dev Server)，后续进行完善
+**注意：** Dll 模式下的组件更新，不会热替换，可能需要 IPC (Dll watch <-> Dev Server)，后续进行完善，或者对于需要频繁改动的依赖，不建议 chunk 至 DLL 中
 
 ## Options
 
