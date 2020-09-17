@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const nodeExternals = require('webpack-node-externals')
 const LoadableWebpackPlugin = require('@loadable/webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { join } = require('path')
 
 const webpack = require('webpack')
 
@@ -18,6 +19,7 @@ module.exports = function getConfig(mode) {
       __dirname: false,
       __filename: false
     },
+    resolve: {},
     mode: 'development',
     devServer: {
       historyApiFallback: true,
@@ -111,13 +113,14 @@ module.exports = function getConfig(mode) {
     config.output.path = __dirname + '/ssrDist'
 
     config.target = 'node'
+    config.resolve.mainFields = ['main', 'module']
     config.externals = [
       nodeExternals({
+        modulesDir: join(__dirname, '../node_modules'),
         allowlist: [/\.css$/]
       })
     ]
-    // config.plugins.push(
-    // )
+    config.plugins.push(new LoadableWebpackPlugin({}))
   }
 
   return config

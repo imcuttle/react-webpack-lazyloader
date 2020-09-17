@@ -80,27 +80,10 @@
       "id": "../../node_modules/scheduler/tracing.js",
       "buildMeta": { "providedExports": true }
     },
-    "./components sync recursive \\.jsx?$": {
-      "id": "./components sync recursive \\.jsx?$",
-      "buildMeta": { "providedExports": true }
-    },
     "./components/button/index.js": {
       "id": "./components/button/index.js",
       "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
     },
-    "./components/todo/index.js": {
-      "id": "./components/todo/index.js",
-      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
-    },
-    "./dll-entry.js": { "id": "./dll-entry.js", "buildMeta": { "exportsType": "namespace", "providedExports": [] } },
-    "./pages sync \\.jsx?$": { "id": "./pages sync \\.jsx?$", "buildMeta": { "providedExports": true } },
-    "./pages/add-todo.js": {
-      "id": "./pages/add-todo.js",
-      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
-    },
-    "./pages/todo-list.js": {
-      "id": "./pages/todo-list.js",
-      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
-    }
+    "./dll-entry.js": { "id": "./dll-entry.js", "buildMeta": { "exportsType": "namespace", "providedExports": [] } }
   }
 }

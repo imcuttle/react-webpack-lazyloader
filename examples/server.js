@@ -1,3 +1,4 @@
+require = require('esm')(module)
 const webpack = require('webpack')
 const Koa = require('koa')
 const { promisify } = require('util')
@@ -25,7 +26,7 @@ const webpackRun = async (mod) => {
   await webpackRun('normal-with-dll')
   await webpackRun('ssr')
 
-  const ssr = require('./ssrDist').default
+  const ssr = require('./reactSSRRender').default
   const mount = require('koa-mount')
 
   app.use(ssr())
