@@ -52,7 +52,6 @@ export const pitch = async function reactLazyLoader(request) {
   const stringedRequest = loaderUtils.stringifyRequest(this, `!!${request}`)
 
   const code = `
-  import {Suspense} from 'react';
   import * as React from 'react';
   ${lazyType === 'loadable' ? `import loadable from '@loadable/component';` : ''}
   ${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
@@ -80,9 +79,9 @@ export const pitch = async function reactLazyLoader(request) {
     ${
       !jsx
         ? `return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));`
-        : `return <Suspense {...suspenseProps}>
+        : `return <React.Suspense {...suspenseProps}>
   <Component {...componentProps} />
-</Suspense>;`
+</React.Suspense>;`
     }`
     }
   });
