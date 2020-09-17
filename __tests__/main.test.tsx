@@ -59,32 +59,80 @@ describe('reactLazyloader', function () {
   it('normal case, match output sourceCode', async function () {
     const { output, stats } = await compiler('button')
     expect(output).toMatchInlineSnapshot(`
-      "
-        import {lazy, Suspense} from 'react';
-        import * as React from 'react';
-        
-        var fallbackItem = null;
-        // request
-        var LazyComponent = lazy(function() {
-         return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
-        });
-        var ExportComponent = React.forwardRef(function (props, ref) {
-          var suspenseProps = {
-            fallback: fallbackItem,
-            maxDuration: 0
-          };
-          var componentProps = Object.assign({}, props, {ref: ref});
-          return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));
-        });
+      "import * as React from 'react';
+      import loadable from '@loadable/component';
+      var fallbackItem = null;
+      var LazyComponent = loadable({
+        resolved: {},
 
-        export default ExportComponent;
-        "
+        chunkName() {
+          return \\"button\\";
+        },
+
+        isReady(props) {
+          const key = this.resolve(props);
+
+          if (this.resolved[key] !== true) {
+            return false;
+          }
+
+          if (typeof __webpack_modules__ !== 'undefined') {
+            return !!__webpack_modules__[key];
+          }
+
+          return false;
+        },
+
+        importAsync: function () {
+          return import(
+          /* webpackChunkName: \\"button\\" */
+          \\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+        },
+
+        requireAsync(props) {
+          const key = this.resolve(props);
+          this.resolved[key] = false;
+          return this.importAsync(props).then(resolved => {
+            this.resolved[key] = true;
+            return resolved;
+          });
+        },
+
+        requireSync(props) {
+          const id = this.resolve(props);
+
+          if (typeof __webpack_require__ !== 'undefined') {
+            return __webpack_require__(id);
+          }
+
+          return eval('module.require')(id);
+        },
+
+        resolve() {
+          if (require.resolveWeak) {
+            return require.resolveWeak(\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+          }
+
+          return eval('require.resolve')(\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+        }
+
+      }, {
+        fallback: fallbackItem
+      });
+      var ExportComponent = /*#__PURE__*/React.forwardRef(function (props, ref) {
+        var componentProps = Object.assign({}, props, {
+          ref: ref
+        });
+        return /*#__PURE__*/React.createElement(LazyComponent, componentProps);
+      });
+      export default ExportComponent;"
     `)
   })
 
   it('inline querystring & option', async function () {
     const { output, stats } = await compiler('button?maxDuration=1000', {
-      fallback: 'React.createElement("div")'
+      fallback: 'React.createElement("div")',
+      lazyType: 'React.lazy'
     })
     expect(output).toMatch('/* webpackChunkName: "button" */')
     expect(output).toMatch('maxDuration: 1000')
