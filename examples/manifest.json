@@ -1,6 +1,33 @@
 {
   "name": "dll",
   "content": {
+    "../../node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js": {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js",
+      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
+    },
+    "../../node_modules/@babel/runtime/helpers/esm/extends.js": {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/extends.js",
+      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
+    },
+    "../../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js": {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/inheritsLoose.js",
+      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
+    },
+    "../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js": {
+      "id": "../../node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js",
+      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
+    },
+    "../../node_modules/@loadable/component/dist/loadable.esm.js": {
+      "id": "../../node_modules/@loadable/component/dist/loadable.esm.js",
+      "buildMeta": {
+        "exportsType": "namespace",
+        "providedExports": ["default", "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED", "lazy", "loadableReady"]
+      }
+    },
+    "../../node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js": {
+      "id": "../../node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js",
+      "buildMeta": { "providedExports": true }
+    },
     "../../node_modules/object-assign/index.js": {
       "id": "../../node_modules/object-assign/index.js",
       "buildMeta": { "providedExports": true }
@@ -19,6 +46,14 @@
     },
     "../../node_modules/react-dom/index.js": {
       "id": "../../node_modules/react-dom/index.js",
+      "buildMeta": { "providedExports": true }
+    },
+    "../../node_modules/react-is/cjs/react-is.development.js": {
+      "id": "../../node_modules/react-is/cjs/react-is.development.js",
+      "buildMeta": { "providedExports": true }
+    },
+    "../../node_modules/react-is/index.js": {
+      "id": "../../node_modules/react-is/index.js",
       "buildMeta": { "providedExports": true }
     },
     "../../node_modules/react/cjs/react.development.js": {
@@ -45,18 +80,27 @@
       "id": "../../node_modules/scheduler/tracing.js",
       "buildMeta": { "providedExports": true }
     },
-    "./components/avatar.js": {
-      "id": "./components/avatar.js",
+    "./components sync recursive \\.jsx?$": {
+      "id": "./components sync recursive \\.jsx?$",
+      "buildMeta": { "providedExports": true }
+    },
+    "./components/button/index.js": {
+      "id": "./components/button/index.js",
       "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
     },
-    "./components/button.js": {
-      "id": "./components/button.js",
+    "./components/todo/index.js": {
+      "id": "./components/todo/index.js",
       "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
     },
-    "./components/full-page.js": {
-      "id": "./components/full-page.js",
+    "./dll-entry.js": { "id": "./dll-entry.js", "buildMeta": { "exportsType": "namespace", "providedExports": [] } },
+    "./pages sync \\.jsx?$": { "id": "./pages sync \\.jsx?$", "buildMeta": { "providedExports": true } },
+    "./pages/add-todo.js": {
+      "id": "./pages/add-todo.js",
       "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
     },
-    "./dll-entry.js": { "id": "./dll-entry.js", "buildMeta": { "exportsType": "namespace", "providedExports": [] } }
+    "./pages/todo-list.js": {
+      "id": "./pages/todo-list.js",
+      "buildMeta": { "exportsType": "namespace", "providedExports": ["default"] }
+    }
   }
 }

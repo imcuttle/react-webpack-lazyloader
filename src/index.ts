@@ -3,7 +3,9 @@
  * 参考 https://github.com/webpack-contrib/style-loader/blob/master/src/index.js 实现
  * @author 余聪
  */
+import { basename } from 'path'
 import * as loaderUtils from 'loader-utils'
+import { transformAsync } from '@babel/core'
 
 /**
  * Input: 'x-button'
@@ -20,12 +22,13 @@ import * as loaderUtils from 'loader-utils'
  *
  * @param request
  */
-export const pitch = function reactLazyLoader(request) {
-  const { chunkName, getChunkName, jsx, esModule, fallback, fallbackRequest, maxDuration } = Object.assign(
+export const pitch = async function reactLazyLoader(request) {
+  const { lazyType, chunkName, getChunkName, jsx, esModule, fallback, fallbackRequest, maxDuration } = Object.assign(
     {
       jsx: false,
       esModule: true,
       fallbackRequest: null,
+      lazyType: 'loadable', // React.lazy
       getChunkName: (request) => {
         return request.replace(/^[./]+|\.([jt]sx?|json)$/g, '')
       },
@@ -37,43 +40,73 @@ export const pitch = function reactLazyLoader(request) {
     loaderUtils.parseQuery(this.resourceQuery || '?')
   )
 
-  const stringList = JSON.parse(loaderUtils.stringifyRequest(this, request)).split('!')
+  const stringList = request.split('!')
   // 获取 basename，去除后缀和 querystring
-  const name = stringList[stringList.length - 1].replace('!', '').replace(/\?.*?$/, '')
+  const name = basename(
+    stringList[stringList.length - 1]
+      .replace('!', '')
+      .replace(/\?.*?$/, '')
+      .replace(/\/index\..*?$/, '')
+  )
 
   const stringedRequest = loaderUtils.stringifyRequest(this, `!!${request}`)
 
   const code = `
-  import {lazy, Suspense} from 'react';
+  import {Suspense} from 'react';
   import * as React from 'react';
+  ${lazyType === 'loadable' ? `import loadable from '@loadable/component';` : ''}
   ${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
   var fallbackItem = ${
     fallbackRequest
       ? `typeof fallbackRequestItem !== 'undefined' ? (fallbackRequestItem.__esModule ? fallbackRequestItem['default'] : fallbackRequestItem) : ${fallback}`
       : fallback
   };
-  // request
-  var LazyComponent = lazy(function() {
+  var LazyComponent = ${lazyType === 'loadable' ? 'loadable' : 'React.lazy'}(function() {
    return import(/* webpackChunkName: ${
      chunkName ? JSON.stringify(chunkName) : loaderUtils.stringifyRequest(this, getChunkName(name))
    } */${stringedRequest});
-  });
+  }${lazyType === 'loadable' ? `, { fallback: fallbackItem }` : ''});
   var ExportComponent = React.forwardRef(function (props, ref) {
-    var suspenseProps = {
+    var componentProps = Object.assign({}, props, {ref: ref});
+    ${
+      lazyType === 'loadable'
+        ? `return ${
+            !jsx ? `React.createElement(LazyComponent, componentProps)` : `<LazyComponent {...componentProps} />`
+          };`
+        : `var suspenseProps = {
       fallback: fallbackItem,
       maxDuration: ${maxDuration}
     };
-    var componentProps = Object.assign({}, props, {ref: ref});
     ${
       !jsx
         ? `return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));`
         : `return <Suspense {...suspenseProps}>
   <Component {...componentProps} />
 </Suspense>;`
+    }`
     }
   });
 
   ${esModule ? `export default ` : `module.exports = `}ExportComponent;
   `
+
+  if (lazyType === 'loadable') {
+    let plugins = []
+    try {
+      plugins.push(require.resolve('@loadable/babel-plugin'))
+    } catch (err) {
+      if (err.code === 'MODULE_NOT_FOUND') {
+        throw new Error(`react-webpack-lazyloader requires '@loadable/babel-plugin' when lazyType is 'loadable'`)
+      }
+    }
+
+    const result = await transformAsync(code, {
+      configFile: false,
+      presets: [require.resolve('@babel/preset-react')],
+      plugins
+    })
+    return result.code
+  }
+
   return code
 }

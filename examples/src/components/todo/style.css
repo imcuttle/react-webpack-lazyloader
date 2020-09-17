@@ -1,0 +1,31 @@
+.todo {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.todo[data-status='done'] {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.todo:hover {
+  background-color: azure;
+}
+
+.todo-datetime {
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 13px;
+  color: #333;
+}
+
+.todo-text {
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.todo-btns {
+  margin-left: 10px;
+}

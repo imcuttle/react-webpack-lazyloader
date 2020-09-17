@@ -62,11 +62,11 @@ describe('reactLazyloader', function () {
       "
         import {lazy, Suspense} from 'react';
         import * as React from 'react';
-
+        
         var fallbackItem = null;
         // request
         var LazyComponent = lazy(function() {
-         return import(/* webpackChunkName: \\"index\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+         return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
         });
         var ExportComponent = React.forwardRef(function (props, ref) {
           var suspenseProps = {
@@ -86,7 +86,7 @@ describe('reactLazyloader', function () {
     const { output, stats } = await compiler('button?maxDuration=1000', {
       fallback: 'React.createElement("div")'
     })
-    expect(output).toMatch('/* webpackChunkName: "index" */')
+    expect(output).toMatch('/* webpackChunkName: "button" */')
     expect(output).toMatch('maxDuration: 1000')
     expect(output).toMatch('fallbackItem = React.createElement("div")')
   })

@@ -1,23 +1,16 @@
 import ReactDOM from 'react-dom'
 import * as React from 'react'
+import { BrowserRouter } from 'react-router-dom'
+import { loadableReady } from '@loadable/component'
+import { App } from './app'
 
-import Button from './components/button'
-import Avatar from './components/avatar'
-import FullPage from './components/full-page'
+loadableReady(() => {
+  const render = window.root.innerHTML ? ReactDOM.hydrate : ReactDOM.render
 
-const App = () => {
-  const [fullPage, setFullPage] = React.useState(false)
-  const fullPageRef = React.useRef()
-
-  console.log('fullPageRef', fullPageRef)
-  return (
-    <div>
-      <h1>App</h1>
-
-      <Button onClick={() => setFullPage((f) => !f)}>切换</Button>
-      {!fullPage ? <Avatar /> : <FullPage ref={fullPageRef} />}
-    </div>
+  render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>,
+    window.root
   )
-}
-
-ReactDOM.render(<App />, window.root)
+})
