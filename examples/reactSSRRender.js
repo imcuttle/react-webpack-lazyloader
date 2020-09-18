@@ -6,7 +6,7 @@ import * as nps from 'path'
 import { readFileSync } from 'fs'
 import { mergeWith } from 'lodash'
 
-const htmlContent = readFileSync(nps.resolve(__dirname, 'dist/index.html'), 'utf8')
+const htmlContent = readFileSync(nps.resolve(__dirname, 'src/index.ejs'), 'utf8')
 
 export default function ssrRender() {
   return async (ctx, next) => {
@@ -34,7 +34,7 @@ export default function ssrRender() {
     const statsFile = nps.resolve(__dirname, 'dist/loadable-stats.json')
     const dllStatsFile = nps.resolve(__dirname, 'dllDist/loadable-stats.json')
     const stats = merge(merge({}, require(statsFile)), require(dllStatsFile))
-    const extractor = new ChunkExtractor({ stats: stats, entrypoints: ['app', 'dll'] })
+    const extractor = new ChunkExtractor({ stats: stats, entrypoints: ['dll', 'app'] })
 
     const context = {}
     const jsx = extractor.collectChunks(
@@ -60,7 +60,7 @@ export default function ssrRender() {
         '<!--ssr_script-->',
         `<script>
 window.initialData = ${JSON.stringify(store.getState())};
-</script>` + extractor.getScriptTags()
+</script>` + extractor.getScriptTags({}).replace(/async/, '')
       )
       .replace('<!--ssr_html-->', html)
     ctx.body = output
