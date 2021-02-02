@@ -61,9 +61,10 @@ export const pitch = async function reactLazyLoader(request) {
       : fallback
   };
   var LazyComponent = ${lazyType === 'loadable' ? 'loadable' : 'React.lazy'}(function() {
-   return import(/* webpackChunkName: ${
-     chunkName ? JSON.stringify(chunkName) : loaderUtils.stringifyRequest(this, getChunkName(name))
-   } */${stringedRequest});
+   return import(/* webpackChunkName: ${loaderUtils.stringifyRequest(
+     this,
+     loaderUtils.interpolateName(this, chunkName ? chunkName : getChunkName(name, request), { content: request })
+   )} */${stringedRequest});
   }${lazyType === 'loadable' ? `, { fallback: fallbackItem }` : ''});
   var ExportComponent = React.forwardRef(function (props, ref) {
     var componentProps = Object.assign({}, props, {ref: ref});

@@ -200,4 +200,11 @@ describe('reactLazyloader', function () {
       </button>
     `)
   })
+
+  it('chunkName', async function () {
+    const { output, stats } = await compiler('button?maxDuration=1000', {
+      chunkName: 'js/[contenthash]'
+    })
+    expect(output).toMatch('/* webpackChunkName: "js/b5d9ec29595ee84bb6d66184be1ac85f" */')
+  })
 })
