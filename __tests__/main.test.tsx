@@ -203,8 +203,8 @@ describe('reactLazyloader', function () {
 
   it('chunkName', async function () {
     const { output, stats } = await compiler('button?maxDuration=1000', {
-      chunkName: 'js/[contenthash]'
+      chunkName: 'js/[name]/[contenthash]'
     })
-    expect(output).toMatch('/* webpackChunkName: "js/b5d9ec29595ee84bb6d66184be1ac85f" */')
+    expect(output).toMatch('/* webpackChunkName: "js/index/b5d9ec29595ee84bb6d66184be1ac85f" */')
   })
 })
