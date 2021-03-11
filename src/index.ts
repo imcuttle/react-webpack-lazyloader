@@ -32,7 +32,7 @@ export const pitch = async function reactLazyLoader(request) {
       getChunkName: (request) => {
         return request.replace(/^[./]+|\.([jt]sx?|json)$/g, '')
       },
-      chunkName: null,
+      chunkName: 'react-lazy-[name]-[contenthash:8]',
       fallback: 'null',
       maxDuration: 0
     },

@@ -49,7 +49,10 @@ const compiler = (fixtureName, options = {}, config?): any => {
                 // },
                 {
                   loader: require.resolve('../src'),
-                  options
+                  options: {
+                    chunkName: null,
+                    ...options
+                  }
                 }
               ]
             },
