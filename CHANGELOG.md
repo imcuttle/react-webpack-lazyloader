@@ -1,4 +1,6 @@
-# 2.0.0 (2021-02-02)
+## [2.0.1](https://github.com/imcuttle/react-webpack-lazyloader/compare/v2.0.0...v2.0.1) (2021-03-11)
+
+# [2.0.0](https://github.com/imcuttle/react-webpack-lazyloader/compare/8a8172245d90b10c268d70fa3051e33558f5049e...v2.0.0) (2021-02-02)
 
 ### Features
 
