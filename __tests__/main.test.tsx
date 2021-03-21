@@ -129,6 +129,33 @@ describe('reactLazyloader', function () {
     `)
   })
 
+  it('React.lazy case, match output sourceCode', async function () {
+    const { output } = await compiler('button', {
+      lazyType: 'React.lazy'
+    })
+    expect(output).toMatchInlineSnapshot(`
+      "
+        import * as React from 'react';
+        
+        
+        var fallbackItem = null;
+        var LazyComponent = React.lazy(function() {
+         return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+        });
+        var ExportComponent = React.forwardRef(function (props, ref) {
+          var componentProps = Object.assign({}, props, {ref: ref});
+          var suspenseProps = {
+            fallback: fallbackItem,
+            maxDuration: 0
+          };
+          return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));
+        });
+
+        export default ExportComponent;
+        "
+    `)
+  })
+
   it('inline querystring & option', async function () {
     const { output, stats } = await compiler('button?maxDuration=1000', {
       fallback: 'React.createElement("div")',
