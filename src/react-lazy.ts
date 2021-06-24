@@ -20,4 +20,6 @@ import { createPitch } from './create'
  *
  * @param request
  */
-export const pitch = createPitch()
+export const pitch = createPitch({
+  lazyType: 'React.lazy'
+})

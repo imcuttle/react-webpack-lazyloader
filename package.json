@@ -35,6 +35,7 @@
     "types",
     "lib",
     "src",
+    "react.js",
     "__tests__"
   ],
   "keywords": [
