@@ -21,6 +21,8 @@ yarn add react-webpack-lazyloader @loadable/babel-plugin --dev
 
 ## How it works?
 
+Use webpack pitch loader and inspired by style-loader.
+
 - Origin Button
 
 ```jsx
@@ -39,6 +41,25 @@ export default Button
 ```
 
 ## Usage
+
+```js
+// webpack.config.js
+module.exports = {
+   module: {
+      rules: [
+         {
+          test: [/\.lazy\.(tsx|jsx?)$/, /\/pages\/[^\/]+?\/index\.tsx$/],
+          loader: 'react-webpack-lazyloader',
+          options: {
+            lazyType: 'React.lazy',
+            fallbackRequest: paths.resolveApp('src/page-loading.tsx'),
+            chunkName: 'react-lazy-[name]-[contenthash:8]',
+          },
+        },
+      ]
+   }
+}
+```
 
 ### 正常使用
 
