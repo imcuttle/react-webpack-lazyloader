@@ -58,7 +58,7 @@ class ErrorBoundary extends React.Component<any, any> {
 describe('reactLazyloader', function () {
   it('normal case, match output sourceCode', async function () {
     const { output, stats } = await compiler('button')
-    expect(output).toMatchInlineSnapshot(`
+    expect(output.trim()).toMatchInlineSnapshot(`
       "import * as React from 'react';
       import loadable from '@loadable/component';
       var fallbackItem = null;
@@ -133,16 +133,15 @@ describe('reactLazyloader', function () {
     const { output } = await compiler('button', {
       lazyType: 'React.lazy'
     })
-    expect(output).toMatchInlineSnapshot(`
-      "
-        import * as React from 'react';
-        
-        
-        var fallbackItem = null;
-        var LazyComponent = React.lazy(function() {
+    expect(output.trim()).toMatchInlineSnapshot(`
+      "import * as React from 'react';
+
+
+      var fallbackItem = null;
+      var LazyComponent = React.lazy(function() {
          return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
         });
-        var ExportComponent = React.forwardRef(function (props, ref) {
+      var ExportComponent = React.forwardRef(function (props, ref) {
           var componentProps = Object.assign({}, props, {ref: ref});
           var suspenseProps = {
             fallback: fallbackItem,
@@ -150,9 +149,7 @@ describe('reactLazyloader', function () {
           };
           return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));
         });
-
-        export default ExportComponent;
-        "
+      export default ExportComponent;"
     `)
   })
 
@@ -232,6 +229,16 @@ describe('reactLazyloader', function () {
     const { output, stats } = await compiler('button?maxDuration=1000', {
       chunkName: 'js/[name]/[contenthash]'
     })
-    expect(output).toMatch('/* webpackChunkName: "js/index/b5d9ec29595ee84bb6d66184be1ac85f" */')
+    expect(output).toMatch('/* webpackChunkName: "js/index/be0f2063e415e7e951ffdd42490a21c9" */')
+  })
+
+  it('exposeNamedList', async function () {
+    const { output, stats } = await compiler('button', {
+      exposeNamedList: ['default', 'View'],
+      lazyType: 'React.lazy'
+    })
+    expect(output).toMatch('export var View = React.forwardRef(')
+    expect(output).toMatch('export default ExportComponent;')
+    // console.log('output', output)
   })
 })

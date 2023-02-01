@@ -45,19 +45,19 @@ export default Button
 ```js
 // webpack.config.js
 module.exports = {
-   module: {
-      rules: [
-         {
-          test: [/\.lazy\.(tsx|jsx?)$/, /\/pages\/[^\/]+?\/index\.tsx$/],
-          loader: 'react-webpack-lazyloader',
-          options: {
-            lazyType: 'React.lazy',
-            fallbackRequest: paths.resolveApp('src/page-loading.tsx'),
-            chunkName: 'react-lazy-[name]-[contenthash:8]',
-          },
-        },
-      ]
-   }
+  module: {
+    rules: [
+      {
+        test: [/\.lazy\.(tsx|jsx?)$/, /\/pages\/[^\/]+?\/index\.tsx$/],
+        loader: 'react-webpack-lazyloader',
+        options: {
+          lazyType: 'React.lazy',
+          fallbackRequest: paths.resolveApp('src/page-loading.tsx'),
+          chunkName: 'react-lazy-[name]-[contenthash:8]'
+        }
+      }
+    ]
+  }
 }
 ```
 
@@ -123,6 +123,13 @@ chunk name
 
 - Type: `string`
 - Default: `null`
+
+### `exposeNamedList`
+
+需要暴露的组件
+
+- Type: `string[]`
+- Default: `['default']`
 
 ## Contributing
 

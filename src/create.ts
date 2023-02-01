@@ -5,19 +5,35 @@
  */
 import { basename } from 'path'
 import * as loaderUtils from 'loader-utils'
+import { single } from 'quote-it'
 import { transformAsync } from '@babel/core'
 
 export const createPitch = (defaultConfig = {}) => {
   return async function reactLazyLoaderPitch(request) {
-    const { lazyType, chunkName, getChunkName, jsx, esModule, fallback, fallbackRequest, maxDuration } = Object.assign(
+    const {
+      lazyType,
+      exposeNamedList,
+      loadableModulePath,
+      loadableBabelPluginModulePath,
+      chunkName,
+      getChunkName,
+      jsx,
+      esModule,
+      fallback,
+      fallbackRequest,
+      maxDuration
+    } = Object.assign(
       {
         jsx: false,
         esModule: true,
         fallbackRequest: null,
         lazyType: 'loadable', // React.lazy
+        loadableModulePath: '@loadable/component',
+        loadableBabelPluginModulePath: '@loadable/babel-plugin',
         getChunkName: (request) => {
           return request.replace(/^[./]+|\.([jt]sx?|json)$/g, '')
         },
+        exposeNamedList: ['default'],
         chunkName: 'react-lazy-[name]-[contenthash:8]',
         fallback: 'null',
         maxDuration: 0
@@ -29,7 +45,7 @@ export const createPitch = (defaultConfig = {}) => {
 
     const stringList = request.split('!')
     // 获取 basename，去除后缀和 querystring
-    const name = basename(
+    const resourceName = basename(
       stringList[stringList.length - 1]
         .replace('!', '')
         .replace(/\?.*?$/, '')
@@ -38,27 +54,53 @@ export const createPitch = (defaultConfig = {}) => {
 
     const stringedRequest = loaderUtils.stringifyRequest(this, `!!${request}`)
 
-    const code = `
-  import * as React from 'react';
-  ${lazyType === 'loadable' ? `import loadable from '@loadable/component';` : ''}
-  ${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
-  var fallbackItem = ${
-    fallbackRequest
-      ? `typeof fallbackRequestItem !== 'undefined' ? (fallbackRequestItem.__esModule ? fallbackRequestItem['default'] : fallbackRequestItem) : ${fallback}`
-      : fallback
+    const getComponentVarName = (label, name) => {
+      if (!label) {
+        return name
+      }
+      if (name === 'default') {
+        return label
+      }
+      return `${label}_${name}`
+    }
+    const getLazyComponentsCode = () => {
+      const getCode = (name) => {
+        let thenCode = ';'
+        if (name !== 'default') {
+          thenCode = `.then(function(v) {
+  var exposeVal = {
+    default: v[${single(name)}]
   };
-  var LazyComponent = ${lazyType === 'loadable' ? 'loadable' : 'React.lazy'}(function() {
+  Object.defineProperty(exposeVal, '__esModule', { value: true });
+  return exposeVal;
+});`
+        }
+
+        return `${lazyType === 'loadable' ? 'loadable' : 'React.lazy'}(function() {
    return import(/* webpackChunkName: ${loaderUtils.stringifyRequest(
      this,
-     loaderUtils.interpolateName(this, chunkName ? chunkName : getChunkName(name, request), { content: request })
-   )} */${stringedRequest});
-  }${lazyType === 'loadable' ? `, { fallback: fallbackItem }` : ''});
-  var ExportComponent = React.forwardRef(function (props, ref) {
+     loaderUtils.interpolateName(this, chunkName ? chunkName : getChunkName(resourceName, request), {
+       content: request
+     })
+   )} */${stringedRequest})${thenCode}
+  }${lazyType === 'loadable' ? `, { fallback: fallbackItem }` : ''})`
+      }
+
+      return exposeNamedList
+        .map((name) => `var ${getComponentVarName('LazyComponent', name)} = ${getCode(name).trim()};`)
+        .join('\n')
+    }
+
+    const getExportComponentsCode = () => {
+      const getCode = (name) => {
+        return `React.forwardRef(function (props, ref) {
     var componentProps = Object.assign({}, props, {ref: ref});
     ${
       lazyType === 'loadable'
         ? `return ${
-            !jsx ? `React.createElement(LazyComponent, componentProps)` : `<LazyComponent {...componentProps} />`
+            !jsx
+              ? `React.createElement(${getComponentVarName('LazyComponent', name)}, componentProps)`
+              : `<${getComponentVarName('LazyComponent', name)} {...componentProps} />`
           };`
         : `var suspenseProps = {
       fallback: fallbackItem,
@@ -66,24 +108,54 @@ export const createPitch = (defaultConfig = {}) => {
     };
     ${
       !jsx
-        ? `return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));`
+        ? `return React.createElement(React.Suspense, suspenseProps, React.createElement(${getComponentVarName(
+            'LazyComponent',
+            name
+          )}, componentProps));`
         : `return <React.Suspense {...suspenseProps}>
-  <Component {...componentProps} />
+  <${getComponentVarName('LazyComponent', name)} {...componentProps} />
 </React.Suspense>;`
     }`
     }
-  });
+  });`
+      }
 
-  ${esModule ? `export default ` : `module.exports = `}ExportComponent;
-  `
+      return exposeNamedList
+        .map((name) => {
+          const getMainCode = (label = 'ExportComponent') =>
+            `var ${getComponentVarName(label, name)} = ${getCode(name).trim()}`
+          return esModule
+            ? name === 'default'
+              ? `${getMainCode()}\nexport default ${getComponentVarName('ExportComponent', name)};`
+              : `export ${getMainCode('')}`
+            : name === 'default'
+            ? `${getMainCode()}\nmodule.exports = ${getComponentVarName('ExportComponent', name)};`
+            : `${getMainCode()}\nexports.${name} = ${getComponentVarName('ExportComponent', name)};`
+        })
+        .join('\n')
+    }
+
+    const code = `
+import * as React from 'react';
+${lazyType === 'loadable' ? `import loadable from ${single(loadableModulePath)};` : ''}
+${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
+var fallbackItem = ${
+      fallbackRequest
+        ? `typeof fallbackRequestItem !== 'undefined' ? (fallbackRequestItem.__esModule ? fallbackRequestItem['default'] : fallbackRequestItem) : ${fallback}`
+        : fallback
+    };
+${getLazyComponentsCode()}
+${getExportComponentsCode()}`
 
     if (lazyType === 'loadable') {
       let plugins = []
       try {
-        plugins.push(require.resolve('@loadable/babel-plugin'))
+        plugins.push(require.resolve(loadableBabelPluginModulePath))
       } catch (err) {
         if (err.code === 'MODULE_NOT_FOUND') {
-          throw new Error(`react-webpack-lazyloader requires '@loadable/babel-plugin' when lazyType is 'loadable'`)
+          console.error(
+            `react-webpack-lazyloader requires '@loadable/babel-plugin' when lazyType is 'loadable' and in SSR mode`
+          )
         }
       }
 
