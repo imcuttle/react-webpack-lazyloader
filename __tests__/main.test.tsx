@@ -137,6 +137,7 @@ describe('reactLazyloader', function () {
       "import * as React from 'react';
 
 
+
       var fallbackItem = null;
       var LazyComponent = React.lazy(function() {
          return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
@@ -147,7 +148,12 @@ describe('reactLazyloader', function () {
             fallback: fallbackItem,
             maxDuration: 0
           };
-          return React.createElement(React.Suspense, suspenseProps, React.createElement(LazyComponent, componentProps));
+          
+          return React.createElement(React.Suspense, suspenseProps,
+        
+          React.createElement(LazyComponent, componentProps)
+        
+      );
         });
       export default ExportComponent;"
     `)
@@ -240,5 +246,15 @@ describe('reactLazyloader', function () {
     expect(output).toMatch('export var View = React.forwardRef(')
     expect(output).toMatch('export default ExportComponent;')
     // console.log('output', output)
+  })
+
+  it('wrapComponentRequest', async function () {
+    const { output } = await compiler('button', {
+      wrapExposeComponentRequest: '../wrap',
+      wrapExposeComponentProps: { a: 2 },
+      lazyType: 'React.lazy'
+    })
+    expect(output).toMatch('var wrapperProps = ' + JSON.stringify({ a: 2 }))
+    expect(output).toMatch('React.createElement(Wrapper, wrapperProps,')
   })
 })

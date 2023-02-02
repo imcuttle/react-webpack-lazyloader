@@ -60,7 +60,7 @@ const compiler = (fixtureName, options = {}, config?): any => {
               test: /\.jsx?$/,
               use: [
                 {
-                  loader: 'babel-loader',
+                  loader: require.resolve('babel-loader'),
                   options: {
                     presets: ['@babel/react']
                   }
@@ -82,7 +82,13 @@ const compiler = (fixtureName, options = {}, config?): any => {
 
       resolve({
         stats,
-        output: stats.toJson().modules[stats.toJson().modules.length - 1].source
+        output: stats
+          .toJson()
+          .modules.reverse()
+          .find((m) => {
+            const arr = m.identifier.split('!')
+            return arr[arr.length - 1].startsWith(require.resolve(pureFilename))
+          })?.source
       } as any)
     })
   })

@@ -131,6 +131,11 @@ chunk name
 - Type: `string[]`
 - Default: `['default']`
 
+### `wrapExposeComponentRequest`
+
+- Type: `string`
+- Default: `null`
+
 ## Contributing
 
 - Fork it!

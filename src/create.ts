@@ -21,12 +21,16 @@ export const createPitch = (defaultConfig = {}) => {
       esModule,
       fallback,
       fallbackRequest,
-      maxDuration
+      maxDuration,
+      wrapExposeComponentRequest,
+      wrapExposeComponentProps
     } = Object.assign(
       {
         jsx: false,
         esModule: true,
         fallbackRequest: null,
+        wrapExposeComponentRequest: null,
+        wrapExposeComponentProps: null,
         lazyType: 'loadable', // React.lazy
         loadableModulePath: '@loadable/component',
         loadableBabelPluginModulePath: '@loadable/babel-plugin',
@@ -106,14 +110,18 @@ export const createPitch = (defaultConfig = {}) => {
       fallback: fallbackItem,
       maxDuration: ${maxDuration}
     };
+    ${wrapExposeComponentRequest ? `var wrapperProps = ${JSON.stringify(wrapExposeComponentProps || {})};` : ''}
     ${
       !jsx
-        ? `return React.createElement(React.Suspense, suspenseProps, React.createElement(${getComponentVarName(
-            'LazyComponent',
-            name
-          )}, componentProps));`
+        ? `return React.createElement(React.Suspense, suspenseProps,
+  ${wrapExposeComponentRequest ? `React.createElement(Wrapper, wrapperProps,` : ''}
+    React.createElement(${getComponentVarName('LazyComponent', name)}, componentProps)
+  ${wrapExposeComponentRequest ? `)` : ''}
+);`
         : `return <React.Suspense {...suspenseProps}>
+${wrapExposeComponentRequest ? `<Wrapper {...wrapperProps}>` : ''}
   <${getComponentVarName('LazyComponent', name)} {...componentProps} />
+${wrapExposeComponentRequest ? `</Wrapper>` : ''}
 </React.Suspense>;`
     }`
     }
@@ -137,6 +145,7 @@ export const createPitch = (defaultConfig = {}) => {
 
     const code = `
 import * as React from 'react';
+${wrapExposeComponentRequest ? `import Wrapper from ${single(wrapExposeComponentRequest)};` : ''}
 ${lazyType === 'loadable' ? `import loadable from ${single(loadableModulePath)};` : ''}
 ${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
 var fallbackItem = ${
