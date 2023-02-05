@@ -69,17 +69,24 @@ export const createPitch = (defaultConfig = {}) => {
     }
     const getLazyComponentsCode = () => {
       const getCode = (name) => {
-        let thenCode = ';'
-        if (name !== 'default') {
-          thenCode = `.then(function(v) {
-  var exposeVal = {
-    default: v[${single(name)}]
+        const thenCode = `.then(function(v) {
+  var exposeVal = v[${single(name)}];
+  ${
+    name === 'default'
+      ? `exposeVal = exposeVal && exposeVal.__esModule ? (exposeVal.default || exposeVal) : exposeVal;`
+      : ''
+  }
+  ${
+    this.mode !== 'production'
+      ? `if (!exposeVal) throw new Error(${single(`${this.resourcePath} 不存在 ${name} 导出组件`)});`
+      : ''
+  }
+  var exposeVals = {
+    default: exposeVal
   };
-  Object.defineProperty(exposeVal, '__esModule', { value: true });
-  return exposeVal;
+  Object.defineProperty(exposeVals, '__esModule', { value: true });
+  return exposeVals;
 });`
-        }
-
         return `${lazyType === 'loadable' ? 'loadable' : 'React.lazy'}(function() {
    return import(/* webpackChunkName: ${loaderUtils.stringifyRequest(
      this,

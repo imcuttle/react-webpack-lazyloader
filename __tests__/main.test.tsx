@@ -86,7 +86,18 @@ describe('reactLazyloader', function () {
         importAsync: function () {
           return import(
           /* webpackChunkName: \\"button\\" */
-          \\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+          \\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\").then(function (v) {
+            var exposeVal = v['default'];
+            exposeVal = exposeVal && exposeVal.__esModule ? exposeVal.default || exposeVal : exposeVal;
+            if (!exposeVal) throw new Error('/Users/bytedance/github/react-webpack-lazyloader/__tests__/fixture/button/index.js 不存在 default 导出组件');
+            var exposeVals = {
+              default: exposeVal
+            };
+            Object.defineProperty(exposeVals, '__esModule', {
+              value: true
+            });
+            return exposeVals;
+          });
         },
 
         requireAsync(props) {
@@ -140,7 +151,16 @@ describe('reactLazyloader', function () {
 
       var fallbackItem = null;
       var LazyComponent = React.lazy(function() {
-         return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\");
+         return import(/* webpackChunkName: \\"button\\" */\\"!!../../../node_modules/babel-loader/lib/index.js??ref--5-0!./index.js\\").then(function(v) {
+        var exposeVal = v['default'];
+        exposeVal = exposeVal && exposeVal.__esModule ? (exposeVal.default || exposeVal) : exposeVal;
+        if (!exposeVal) throw new Error('/Users/bytedance/github/react-webpack-lazyloader/__tests__/fixture/button/index.js 不存在 default 导出组件');
+        var exposeVals = {
+          default: exposeVal
+        };
+        Object.defineProperty(exposeVals, '__esModule', { value: true });
+        return exposeVals;
+      });
         });
       var ExportComponent = React.forwardRef(function (props, ref) {
           var componentProps = Object.assign({}, props, {ref: ref});
@@ -245,7 +265,7 @@ describe('reactLazyloader', function () {
     })
     expect(output).toMatch('export var View = React.forwardRef(')
     expect(output).toMatch('export default ExportComponent;')
-    // console.log('output', output)
+    console.log('output', output)
   })
 
   it('wrapComponentRequest', async function () {
