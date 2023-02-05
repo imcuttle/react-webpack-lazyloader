@@ -169,11 +169,12 @@ describe('reactLazyloader', function () {
             maxDuration: 0
           };
           
-          return React.createElement(React.Suspense, suspenseProps,
-        
+          return (
+              
+        React.createElement(React.Suspense, suspenseProps,
           React.createElement(LazyComponent, componentProps)
         
-      );
+      ));
         });
       export default ExportComponent;"
     `)

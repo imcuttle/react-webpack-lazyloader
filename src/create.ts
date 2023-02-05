@@ -120,16 +120,17 @@ export const createPitch = (defaultConfig = {}) => {
     ${wrapExposeComponentRequest ? `var wrapperProps = ${JSON.stringify(wrapExposeComponentProps || {})};` : ''}
     ${
       !jsx
-        ? `return React.createElement(React.Suspense, suspenseProps,
-  ${wrapExposeComponentRequest ? `React.createElement(Wrapper, wrapperProps,` : ''}
+        ? `return (
+        ${wrapExposeComponentRequest ? `React.createElement(Wrapper, wrapperProps,` : ''}
+  React.createElement(React.Suspense, suspenseProps,
     React.createElement(${getComponentVarName('LazyComponent', name)}, componentProps)
   ${wrapExposeComponentRequest ? `)` : ''}
-);`
-        : `return <React.Suspense {...suspenseProps}>
-${wrapExposeComponentRequest ? `<Wrapper {...wrapperProps}>` : ''}
+));`
+        : `return (${wrapExposeComponentRequest ? `<Wrapper {...wrapperProps}>` : ''}
+<React.Suspense {...suspenseProps}>
   <${getComponentVarName('LazyComponent', name)} {...componentProps} />
-${wrapExposeComponentRequest ? `</Wrapper>` : ''}
-</React.Suspense>;`
+</React.Suspense>
+${wrapExposeComponentRequest ? `</Wrapper>` : ''});`
     }`
     }
   });`
