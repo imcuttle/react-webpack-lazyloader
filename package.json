@@ -1,6 +1,6 @@
 {
   "name": "react-webpack-lazyloader",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "The webpack loader for fetch react component async",
   "author": "余聪 <yucong06@meituan.com>",
   "scripts": {
