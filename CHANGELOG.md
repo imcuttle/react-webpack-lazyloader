@@ -1,3 +1,9 @@
+## [2.0.7](https://github.com/imcuttle/react-webpack-lazyloader/compare/v2.0.6...v2.0.7) (2023-02-07)
+
+### Features
+
+- add hoist ([7c264f3](https://github.com/imcuttle/react-webpack-lazyloader/commit/7c264f3dcfc5c1093b6f2880a6636cfe70d41fa6))
+
 ## [2.0.6](https://github.com/imcuttle/react-webpack-lazyloader/compare/v2.0.5...v2.0.6) (2023-02-07)
 
 ### Features
