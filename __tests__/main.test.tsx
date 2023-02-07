@@ -60,6 +60,7 @@ describe('reactLazyloader', function () {
     const { output, stats } = await compiler('button')
     expect(output.trim()).toMatchInlineSnapshot(`
       "import * as React from 'react';
+      import hoist from 'hoist-non-react-statics';
       import loadable from '@loadable/component';
       var fallbackItem = null;
       var LazyComponent = loadable({
@@ -130,12 +131,12 @@ describe('reactLazyloader', function () {
       }, {
         fallback: fallbackItem
       });
-      var ExportComponent = /*#__PURE__*/React.forwardRef(function (props, ref) {
+      var ExportComponent = hoist( /*#__PURE__*/React.forwardRef(function (props, ref) {
         var componentProps = Object.assign({}, props, {
           ref: ref
         });
         return /*#__PURE__*/React.createElement(LazyComponent, componentProps);
-      });
+      }), LazyComponent);
       export default ExportComponent;"
     `)
   })
@@ -146,6 +147,7 @@ describe('reactLazyloader', function () {
     })
     expect(output.trim()).toMatchInlineSnapshot(`
       "import * as React from 'react';
+      import hoist from 'hoist-non-react-statics';
 
 
 
@@ -162,7 +164,7 @@ describe('reactLazyloader', function () {
         return exposeVals;
       });
         });
-      var ExportComponent = React.forwardRef(function (props, ref) {
+      var ExportComponent = hoist(React.forwardRef(function (props, ref) {
           var componentProps = Object.assign({}, props, {ref: ref});
           var suspenseProps = {
             fallback: fallbackItem,
@@ -175,7 +177,7 @@ describe('reactLazyloader', function () {
           React.createElement(LazyComponent, componentProps)
         
       ));
-        });
+        }), LazyComponent);
       export default ExportComponent;"
     `)
   })
@@ -264,7 +266,7 @@ describe('reactLazyloader', function () {
       exposeNamedList: ['default', 'View'],
       lazyType: 'React.lazy'
     })
-    expect(output).toMatch('export var View = React.forwardRef(')
+    expect(output).toMatch('export var View = hoist(React.forwardRef(')
     expect(output).toMatch('export default ExportComponent;')
     console.log('output', output)
   })

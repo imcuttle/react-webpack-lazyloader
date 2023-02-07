@@ -23,7 +23,8 @@ export const createPitch = (defaultConfig = {}) => {
       fallbackRequest,
       maxDuration,
       wrapExposeComponentRequest,
-      wrapExposeComponentProps
+      wrapExposeComponentProps,
+      hoistNonReactStaticsModulePath
     } = Object.assign(
       {
         jsx: false,
@@ -31,6 +32,7 @@ export const createPitch = (defaultConfig = {}) => {
         fallbackRequest: null,
         wrapExposeComponentRequest: null,
         wrapExposeComponentProps: null,
+        hoistNonReactStaticsModulePath: 'hoist-non-react-statics',
         lazyType: 'loadable', // React.lazy
         loadableModulePath: '@loadable/component',
         loadableBabelPluginModulePath: '@loadable/babel-plugin',
@@ -104,7 +106,7 @@ export const createPitch = (defaultConfig = {}) => {
 
     const getExportComponentsCode = () => {
       const getCode = (name) => {
-        return `React.forwardRef(function (props, ref) {
+        let innerCode = `React.forwardRef(function (props, ref) {
     var componentProps = Object.assign({}, props, {ref: ref});
     ${
       lazyType === 'loadable'
@@ -133,7 +135,11 @@ export const createPitch = (defaultConfig = {}) => {
 ${wrapExposeComponentRequest ? `</Wrapper>` : ''});`
     }`
     }
-  });`
+  })`
+        if (hoistNonReactStaticsModulePath) {
+          return `hoist(${innerCode}, ${getComponentVarName('LazyComponent', name)});`
+        }
+        return `${innerCode};`
       }
 
       return exposeNamedList
@@ -153,6 +159,7 @@ ${wrapExposeComponentRequest ? `</Wrapper>` : ''});`
 
     const code = `
 import * as React from 'react';
+${hoistNonReactStaticsModulePath ? `import hoist from ${single(hoistNonReactStaticsModulePath)};` : ''}
 ${wrapExposeComponentRequest ? `import Wrapper from ${single(wrapExposeComponentRequest)};` : ''}
 ${lazyType === 'loadable' ? `import loadable from ${single(loadableModulePath)};` : ''}
 ${fallbackRequest ? `import fallbackRequestItem from ${loaderUtils.stringifyRequest(this, fallbackRequest)};` : ''}
@@ -164,7 +171,7 @@ var fallbackItem = ${
 ${getLazyComponentsCode()}
 ${getExportComponentsCode()}`
 
-    if (lazyType === 'loadable') {
+    if (lazyType === 'loadable' && loadableBabelPluginModulePath) {
       let plugins = []
       try {
         plugins.push(require.resolve(loadableBabelPluginModulePath))
