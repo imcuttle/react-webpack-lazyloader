@@ -51,6 +51,7 @@ const compiler = (fixtureName, options = {}, config?): any => {
                   loader: require.resolve('../src'),
                   options: {
                     chunkName: null,
+                    hoistNonReactStaticsModulePath: 'hoist-non-react-statics',
                     ...options
                   }
                 }

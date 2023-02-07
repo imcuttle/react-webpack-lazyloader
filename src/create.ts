@@ -32,7 +32,7 @@ export const createPitch = (defaultConfig = {}) => {
         fallbackRequest: null,
         wrapExposeComponentRequest: null,
         wrapExposeComponentProps: null,
-        hoistNonReactStaticsModulePath: 'hoist-non-react-statics',
+        hoistNonReactStaticsModulePath: require.resolve('hoist-non-react-statics/dist/hoist-non-react-statics'),
         lazyType: 'loadable', // React.lazy
         loadableModulePath: '@loadable/component',
         loadableBabelPluginModulePath: '@loadable/babel-plugin',
