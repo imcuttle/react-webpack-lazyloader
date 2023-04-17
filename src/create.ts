@@ -22,6 +22,7 @@ export const createPitch = (defaultConfig = {}) => {
       fallback,
       fallbackRequest,
       maxDuration,
+      webpackRequestPrefix,
       wrapExposeComponentRequest,
       wrapExposeComponentProps,
       hoistNonReactStaticsModulePath
@@ -32,6 +33,7 @@ export const createPitch = (defaultConfig = {}) => {
         fallbackRequest: null,
         wrapExposeComponentRequest: null,
         wrapExposeComponentProps: null,
+        webpackRequestPrefix: '!!',
         hoistNonReactStaticsModulePath: require.resolve('hoist-non-react-statics/dist/hoist-non-react-statics'),
         lazyType: 'loadable', // React.lazy
         loadableModulePath: '@loadable/component',
@@ -58,7 +60,7 @@ export const createPitch = (defaultConfig = {}) => {
         .replace(/\/index\..*?$/, '')
     )
 
-    const stringedRequest = loaderUtils.stringifyRequest(this, `!!${request}`)
+    const stringedRequest = loaderUtils.stringifyRequest(this, `${webpackRequestPrefix || ''}${request}`)
 
     const getComponentVarName = (label, name) => {
       if (!label) {
